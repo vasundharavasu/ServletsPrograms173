@@ -1,0 +1,109 @@
+                                      Index.HTML
+          =====================================================================
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="servlet1">  
+Name:<input type="text" name="userName"/><br/>  
+<input type="submit" value="go"/>  
+</form> 
+</body>
+</html>
+         
+                                      FIRST SERVLET
+                       =====================================================
+public class FirstServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+		 try{  
+			  
+		        response.setContentType("text/html");  
+		        PrintWriter out = response.getWriter();  
+		          
+		        String n=request.getParameter("userName");  
+		        out.print("Welcome "+n);  
+		          
+		        HttpSession session=request.getSession();  
+		        session.setAttribute("uname",n);  
+		  
+		        out.print("<a href='servlet2'>visit</a>");  
+		                  
+		        out.close();  
+		  
+		                }
+		 catch(Exception e)
+		 {
+			 System.out.println(e);
+		 }  
+	}
+}
+	
+
+
+                                            SECOND SERVLET
+                       ===========================================================
+public class SecondServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+		   try{  
+			   
+		        response.setContentType("text/html");  
+		        PrintWriter out = response.getWriter();  
+		          
+		        HttpSession session=request.getSession(false);  
+		        String n=(String)session.getAttribute("uname");  
+		        out.print("Hello "+n);  
+		  
+		        out.close();  
+		  
+		                }
+		   catch(Exception e){
+			   System.out.println(e);
+		   }  
+	}
+
+}
+
+
+                                         WEB.XML
+                      ==================================================
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+  <display-name>WebProjectDemo2</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+ <servlet>
+    <servlet-name>S1</servlet-name>
+    <servlet-class>org.com.gen16.FirstServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>S1</servlet-name>
+    <url-pattern>/servlet1</url-pattern> 
+</servlet-mapping>  
+  
+  <servlet>
+    <servlet-name>S2</servlet-name>
+    <servlet-class>org.com.gen16.SecondServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>S2</servlet-name>
+    <url-pattern>/servlet2</url-pattern> 
+</servlet-mapping>  
+  
+</web-app>
